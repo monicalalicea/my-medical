@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { ScrollView } from 'react-native';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import {
   Tabs,
   TabsList,
@@ -7,65 +10,107 @@ import {
   TabsTriggerText,
   TabsIndicator,
 } from '@/components/ui/tabs';
+import {
+  Select,
+  SelectTrigger,
+  SelectInput,
+  SelectIcon,
+  SelectPortal,
+  SelectBackdrop,
+  SelectContent,
+  SelectDragIndicator,
+  SelectDragIndicatorWrapper,
+  SelectItem,
+} from '@/components/ui/select';
+import {
+  FormControl,
+  FormControlLabel,
+  FormControlLabelText,
+} from '@/components/ui/form-control';
+import { ChevronDownIcon } from '@/components/ui/icon';
 import { Box } from '@/components/ui/box';
-//import { Text } from '@/components/ui/text';
+import { Text } from '@/components/ui/text';
 
-import { Text, View, StyleSheet } from 'react-native';
+type SortOption = 'date' | 'recordType' | 'orderingDoctor';
 
-export default function Index() {
+export default function RecordsScreen() {
+  const [sortBy, setSortBy] = useState<SortOption>('date');
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>About screen</Text>
-    </View>
+    <ScrollView className="flex-1 bg-background" contentContainerClassName="p-4">
+      <Tabs defaultValue="allRecords" variant="filled">
+        <TabsList>
+          <TabsIndicator />
+          <TabsTrigger value="allRecords">
+            <TabsTriggerText>All Records</TabsTriggerText>
+          </TabsTrigger>
+          <TabsTrigger value="trends">
+            <TabsTriggerText>Trends</TabsTriggerText>
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContentWrapper>
+          <TabsContent value="allRecords">
+            <FormControl className="mb-4">
+              <FormControlLabel>
+                <FormControlLabelText>Sort By</FormControlLabelText>
+              </FormControlLabel>
+              <Select
+                selectedValue={sortBy}
+                onValueChange={(value) => setSortBy(value as SortOption)}
+              >
+                <SelectTrigger variant="outline" size="md">
+                  <SelectInput placeholder="Select option" />
+                  <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                </SelectTrigger>
+                <SelectPortal>
+                  <SelectBackdrop />
+                  <SelectContent>
+                    <SelectDragIndicatorWrapper>
+                      <SelectDragIndicator />
+                    </SelectDragIndicatorWrapper>
+                    <SelectItem label="Date" value="date" />
+                    <SelectItem label="Record Type" value="recordType" />
+                    <SelectItem label="Ordering Doctor" value="orderingDoctor" />
+                  </SelectContent>
+                </SelectPortal>
+              </Select>
+            </FormControl>
+
+            <EmptyState
+              icon="folder-open-outline"
+              title="No records yet"
+              message="Records you upload will show up here."
+            />
+          </TabsContent>
+
+          <TabsContent value="trends">
+            <EmptyState
+              icon="analytics-outline"
+              title="No trends yet"
+              message="Trends from your lab results will appear once you've added some records."
+            />
+          </TabsContent>
+        </TabsContentWrapper>
+      </Tabs>
+    </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#25292e',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    color: '#fff',
-  },
-});
-
-
-function Example() {
+function EmptyState({
+  icon,
+  title,
+  message,
+}: {
+  icon: React.ComponentProps<typeof Ionicons>['name'];
+  title: string;
+  message: string;
+}) {
   return (
-    <Tabs defaultValue="home">
-      <TabsList>
-        <TabsTrigger value="home">
-          <TabsTriggerText>Records</TabsTriggerText>
-        </TabsTrigger>
-        <TabsTrigger value="profile">
-          <TabsTriggerText>Upload</TabsTriggerText>
-        </TabsTrigger>
-        <TabsTrigger value="settings">
-          <TabsTriggerText>Logs</TabsTriggerText>
-        </TabsTrigger>
-        <TabsIndicator />
-      </TabsList>
-
-      <TabsContentWrapper>
-        <TabsContent value="home">
-          <Box className="p-4">
-            <Text className="text-foreground">Welcome to the Home tab!</Text>
-          </Box>
-        </TabsContent>
-        <TabsContent value="profile">
-          <Box className="p-4">
-            <Text className="text-foreground">Your profile information</Text>
-          </Box>
-        </TabsContent>
-        <TabsContent value="settings">
-          <Box className="p-4">
-            <Text className="text-foreground">Settings and preferences</Text>
-          </Box>
-        </TabsContent>
-      </TabsContentWrapper>
-    </Tabs>
+    <Box className="items-center gap-2 rounded-lg border border-border p-8">
+      <Ionicons name={icon} size={40} color="gray" />
+      <Text className="text-foreground font-semibold">{title}</Text>
+      <Text className="text-muted-foreground text-center">{message}</Text>
+    </Box>
   );
 }
