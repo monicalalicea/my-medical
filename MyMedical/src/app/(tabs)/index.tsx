@@ -31,7 +31,13 @@ import { ChevronDownIcon } from '@/components/ui/icon';
 import { Box } from '@/components/ui/box';
 import { Text } from '@/components/ui/text';
 
-type SortOption = 'date' | 'recordType' | 'orderingDoctor';
+const SORT_OPTIONS = [
+  { value: 'date', label: 'Date' },
+  { value: 'recordType', label: 'Record Type' },
+  { value: 'orderingDoctor', label: 'Ordering Doctor' },
+] as const;
+
+type SortOption = (typeof SORT_OPTIONS)[number]['value'];
 
 export default function RecordsScreen() {
   const [sortBy, setSortBy] = useState<SortOption>('date');
@@ -57,6 +63,9 @@ export default function RecordsScreen() {
               </FormControlLabel>
               <Select
                 selectedValue={sortBy}
+                // Select only learns labels when an item is tapped, so show the
+                // default's label on first render instead of its raw value
+                initialLabel={SORT_OPTIONS.find((o) => o.value === sortBy)?.label}
                 onValueChange={(value) => setSortBy(value as SortOption)}
               >
                 <SelectTrigger variant="outline" size="md">
@@ -69,9 +78,13 @@ export default function RecordsScreen() {
                     <SelectDragIndicatorWrapper>
                       <SelectDragIndicator />
                     </SelectDragIndicatorWrapper>
-                    <SelectItem label="Date" value="date" />
-                    <SelectItem label="Record Type" value="recordType" />
-                    <SelectItem label="Ordering Doctor" value="orderingDoctor" />
+                    {SORT_OPTIONS.map((option) => (
+                      <SelectItem
+                        key={option.value}
+                        label={option.label}
+                        value={option.value}
+                      />
+                    ))}
                   </SelectContent>
                 </SelectPortal>
               </Select>

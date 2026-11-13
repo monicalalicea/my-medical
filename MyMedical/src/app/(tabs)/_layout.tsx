@@ -21,7 +21,12 @@ export default function TabLayout() {
             options={{ 
                 title: 'Symptoms',
                 tabBarIcon: ({ color, focused }) => (<Ionicons name={focused ? 'list' : 'list-outline'} color={color} size={24}/>)
-                 
+                }} />
+        <Tabs.Screen 
+            name="prescription" 
+            options={{ 
+                title: 'Prescription',
+                tabBarIcon: ({ color, focused }) => (<Ionicons name={focused ? 'medical' : 'medical-outline'} color={color} size={24}/>)
                 }} />
     </Tabs>
   ) 
