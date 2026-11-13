@@ -36,17 +36,11 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-example
 
 # generated native folders
 /ios
 /android
-/assets
-/components
 
-/.vscode
-/.claude
-AGENTS.md 
-LICENSE
-.npmrc
-babel.config.js
+
+# personal Claude Code settings
+.claude/settings.local.json
